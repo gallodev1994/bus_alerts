@@ -64,6 +64,9 @@
 Tests - I don't use TDD because i learn SOLID pattern , before i will implement
 
 ````
-   curl  --json '{"name": "christian", "email": "contato.gallodevgmail.com"}' http://localhost:3000/clients
-   curl  http://localhost:3000/clients ```
+   curl  --json '{"name": "christian", "email": "contato.gallodev@gmail.com"}' http://localhost:3000/clients
+   curl  http://localhost:3000/clients 
+   curl -X PATCH http://localhost:3000/clients/change-email/1 --json '{"name": "christian", "email": "contato.gallodev@gmail.com"}'    
+   
+   ```
 ````

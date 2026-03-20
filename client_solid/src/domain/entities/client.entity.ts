@@ -1,6 +1,8 @@
 import { EmailVO } from '../value-objects/email.vo';
 import { ClientRules } from '../enums/client.rules';
 import { ClientActions } from './client.actions';
+import { ClientEmailPolicy } from './client-email.policy';
+import { randomUUID, UUID } from 'crypto';
 
 type ClientProps = {
   readonly name: string;
@@ -8,6 +10,7 @@ type ClientProps = {
 };
 
 export class Client {
+  private id: UUID = randomUUID();
   private props: ClientProps;
   private active = true;
   private admin = false;
@@ -20,19 +23,18 @@ export class Client {
   }
 
   private validate() {
-    if (!this.props.name) throw new Error('Name required');
-    if (!this.props.email.value.includes('@'))
-      throw new Error('Invalid e-mail format');
     this.checkIsAdmin();
   }
 
   private checkIsAdmin() {
     if (this.props.email.value.includes('@admin.com')) {
       this.admin = true;
+      this.clientRule = ClientRules.ADMIN
     }
   }
 
-  static createUser(props: ClientProps) {
+  static createClient(props: ClientProps) {
+    if (!props.name) throw new Error('Name required');
     return new Client(props);
   }
 
@@ -50,6 +52,10 @@ export class Client {
 
   get isActive() {
     return this.active;
+  }
+
+  get clientId() {
+    return this.id;
   }
 
   get isEnablePerformAction() {
@@ -71,8 +77,7 @@ export class Client {
   }
 
   updateEmail(email: EmailVO) {
-    const enabled_to = [ClientRules.MANAGER, ClientRules.ADMIN];
-    if (!enabled_to.includes(this.clientRule)) {
+    if (!ClientEmailPolicy.canUpdate(this.clientRule)) {
       throw new Error("The client don't have a rule to update email");
     }
     this.props.email = email;

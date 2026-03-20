@@ -19,4 +19,11 @@ export class ClientMapper {
       fetchDateTime: now,
     }));
   }
+
+  static toDomain(data: any): Client {
+    return Client.createClient({
+      email: data.email,
+      name: data.name,
+    });
+  }
 }

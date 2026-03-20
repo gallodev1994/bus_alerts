@@ -1,36 +1,29 @@
 import { Client } from '@/domain/entities/client.entity';
 import type { ClientRepository } from '@/domain/repositories/client.repository';
 import { EmailVO } from '@/domain/value-objects/email.vo';
+import { ClientMapper } from '@/application/mappers/client.mapper';
 
 export class PrismaClientRepository implements ClientRepository {
-  save(client: Client): Promise<Client> {
-    const mock_response: Client = new Client({
+  async save(client: Client): Promise<Client> {
+    const mock_response: Client = Client.createClient({
       email: client.email,
       name: client.name,
     });
 
-    return new Promise((resolve) => {
-      resolve(mock_response);
-    });
+    return mock_response;
   }
   async list(): Promise<Client[]> {
-    return Array.from(
-      { length: 5 },
-      () =>
-        new Client({
-          email: new EmailVO('teste@teste.com'),
-          name: 'teste',
-        }),
+    return Array.from({ length: 5 }, () =>
+      Client.createClient({
+        email: new EmailVO('teste@teste.com'),
+        name: 'teste',
+      }),
     );
   }
-  getById(id: string): Promise<Client | null> {
-    return new Promise((resolve) => {
-      resolve(
-        new Client({
-          email: new EmailVO('teste2@admin.com'),
-          name: 'teste',
-        }),
-      );
+  async getById(id: string): Promise<Client | null> {
+    return ClientMapper.toDomain({
+      email: new EmailVO('teste2@admin.com'),
+      name: 'teste',
     });
   }
 }

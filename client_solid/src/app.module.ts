@@ -5,6 +5,7 @@ import { CLIENT_REPOSITORY } from '@/shared/tokens/client.repository.token';
 import { CreateClienteUseCase } from '@/application/usecases/create-client.usecase';
 import { PrismaClientRepository } from '@/infrastructure/database/prisma/prisma-client.repositoy';
 import { GetClientUseCase } from '@/application/usecases/get-client.usecase';
+import { UpdateEmailUseCase } from './application/usecases/update-email.usecase';
 
 @Module({
   imports: [],
@@ -12,6 +13,7 @@ import { GetClientUseCase } from '@/application/usecases/get-client.usecase';
   providers: [
     CreateClienteUseCase,
     GetClientUseCase,
+    UpdateEmailUseCase,
     {
       useClass: PrismaClientRepository,
       provide: CLIENT_REPOSITORY,
