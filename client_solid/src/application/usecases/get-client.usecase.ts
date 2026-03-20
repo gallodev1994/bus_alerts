@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import type { ClientRepository } from '@/domain/repositories/client.repository';
 import type { ClientResponseDto } from '@/presentation/client/dto/client-response.dto';
 import { CLIENT_REPOSITORY } from '@/shared/tokens/client.repository.token';
@@ -20,6 +20,11 @@ export class GetClientUseCase {
         throw new ClientNotFoundError(id);
       }
 
+      clientById.desactive();
+      clientById.getActions();
+
+      Logger.debug(clientById);
+      Logger.debug(clientById.getActions());
       return ClientMapper.toDTO(clientById);
     }
 

@@ -47,6 +47,8 @@
 1. [x] github public repo
 2. [x] project boirplate
 3. [x] application splited in layers
+4. [x] validate e-mail with valid-objects
+5. [x] increase domain rules
 
 - Todo
 

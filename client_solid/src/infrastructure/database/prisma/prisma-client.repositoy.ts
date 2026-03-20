@@ -4,23 +4,33 @@ import { EmailVO } from '@/domain/value-objects/email.vo';
 
 export class PrismaClientRepository implements ClientRepository {
   save(client: Client): Promise<Client> {
-    const res = {
+    const mock_response: Client = new Client({
       email: client.email,
       name: client.name,
-    };
+    });
 
     return new Promise((resolve) => {
-      resolve(new Client(res.name, res.email));
+      resolve(mock_response);
     });
   }
-  list(): Promise<Client[]> {
-    return new Promise((resolve) => {
-      resolve(new Array(new Client('xx', new EmailVO('a'))));
-    });
+  async list(): Promise<Client[]> {
+    return Array.from(
+      { length: 5 },
+      () =>
+        new Client({
+          email: new EmailVO('teste@teste.com'),
+          name: 'teste',
+        }),
+    );
   }
   getById(id: string): Promise<Client | null> {
     return new Promise((resolve) => {
-      resolve(new Client(id, new EmailVO('a')));
+      resolve(
+        new Client({
+          email: new EmailVO('teste2@admin.com'),
+          name: 'teste',
+        }),
+      );
     });
   }
 }
