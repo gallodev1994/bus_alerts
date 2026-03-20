@@ -1,11 +1,14 @@
-import { EmailVO } from '@/domain/value-objects/email.vo';
+import { EmailVO } from '../value-objects/email.vo';
 
 export class Client {
-  public readonly name: string;
-  public readonly email: EmailVO;
+  constructor(
+    public readonly name: string,
+    public readonly email: EmailVO,
+  ) {
+    this.validate();
+  }
 
-  constructor(name: string, email: EmailVO) {
-    this.name = name;
-    this.email = email;
+  private validate() {
+    if (!this.name) throw new Error('Name required');
   }
 }
