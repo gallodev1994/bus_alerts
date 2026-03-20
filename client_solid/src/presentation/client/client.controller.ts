@@ -1,8 +1,8 @@
-import { Controller, Get, Body, Post, Query, Param } from '@nestjs/common';
-import { Client } from '@/domain/entities/client.entity';
+import { Controller, Get, Body, Post, Param } from '@nestjs/common';
 import type { CreateClientDTO } from './dto/create.client.dto';
 import { CreateClienteUseCase } from '@/application/usecases/create-client.usecase';
 import { GetClientUseCase } from '@/application/usecases/get-client.usecase';
+import { ClientResponseDto } from './dto/client-response.dto';
 
 @Controller('/clients')
 export class ClientController {
@@ -12,17 +12,19 @@ export class ClientController {
   ) {}
 
   @Post()
-  save(@Body() createClientDto: CreateClientDTO): Promise<Client> {
+  save(@Body() createClientDto: CreateClientDTO): Promise<ClientResponseDto> {
     return this.createClientUseCase.execute(createClientDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(
+    @Param('id') id: string,
+  ): Promise<ClientResponseDto | ClientResponseDto[]> {
     return this.getClientUseCase.execute(id);
   }
 
   @Get()
-  find() {
+  find(): Promise<ClientResponseDto | ClientResponseDto[]> {
     return this.getClientUseCase.execute();
   }
 }
