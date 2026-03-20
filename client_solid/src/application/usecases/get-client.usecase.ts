@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import type { ClientRepository } from '@/domain/repositories/client.repository';
+import type { ClientReadRepository } from '@/domain/repositories/client.repository';
 import type { ClientResponseDto } from '@/presentation/client/dto/client-response.dto';
 import { CLIENT_REPOSITORY } from '@/shared/tokens/client.repository.token';
 import { ClientMapper } from '@/application/mappers/client.mapper';
@@ -9,7 +9,7 @@ import { ClientNotFoundError } from '@/domain/errors/client-not-found.error';
 export class GetClientUseCase {
   constructor(
     @Inject(CLIENT_REPOSITORY)
-    private readonly clientRepository: ClientRepository,
+    private readonly clientRepository: ClientReadRepository,
   ) {}
 
   async execute(id?: string): Promise<ClientResponseDto | ClientResponseDto[]> {

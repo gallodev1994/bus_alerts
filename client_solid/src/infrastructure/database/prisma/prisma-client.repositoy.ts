@@ -1,9 +1,14 @@
 import { Client } from '@/domain/entities/client.entity';
-import type { ClientRepository } from '@/domain/repositories/client.repository';
+import type {
+  ClientReadRepository,
+  ClientWriteRepository,
+} from '@/domain/repositories/client.repository';
 import { EmailVO } from '@/domain/value-objects/email.vo';
 import { ClientMapper } from '@/application/mappers/client.mapper';
 
-export class PrismaClientRepository implements ClientRepository {
+export class PrismaClientRepository
+  implements ClientReadRepository, ClientWriteRepository
+{
   async save(client: Client): Promise<Client> {
     const mock_response: Client = Client.createClient({
       email: client.email,

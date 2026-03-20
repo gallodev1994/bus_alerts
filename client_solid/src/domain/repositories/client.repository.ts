@@ -1,7 +1,10 @@
 import { Client } from '@/domain/entities/client.entity';
 
-export interface ClientRepository {
+export interface ClientWriteRepository {
   save(client: Client): Promise<Client>;
+}
+
+export interface ClientReadRepository {
   list(): Promise<Client[]>;
   getById(id: string): Promise<Client | null>;
 }

@@ -67,11 +67,11 @@ export class Client {
     this.clientRule = rule;
   }
 
-  updateEmail(email: EmailVO) {
+  updateEmail(email: string) {
     if (!ClientEmailPolicy.canUpdate(this.clientRule)) {
       throw new PermissionError();
     }
-    this.props.email = email;
+    this.props.email = new EmailVO(email);
   }
 
   getActions() {
