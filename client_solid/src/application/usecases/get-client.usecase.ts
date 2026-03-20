@@ -20,11 +20,6 @@ export class GetClientUseCase {
         throw new ClientNotFoundError(id);
       }
 
-      clientById.desactive();
-      clientById.getActions();
-
-      Logger.debug(clientById);
-      Logger.debug(clientById.getActions());
       return ClientMapper.toDTO(clientById);
     }
 

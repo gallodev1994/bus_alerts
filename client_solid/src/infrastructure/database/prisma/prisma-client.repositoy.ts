@@ -22,7 +22,7 @@ export class PrismaClientRepository implements ClientRepository {
   }
   async getById(id: string): Promise<Client | null> {
     return ClientMapper.toDomain({
-      email: new EmailVO('teste2@admin.com'),
+      email: new EmailVO('teste2@adminx.com'),
       name: 'teste',
     });
   }

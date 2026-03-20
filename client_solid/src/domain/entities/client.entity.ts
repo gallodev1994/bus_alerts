@@ -3,6 +3,7 @@ import { ClientRules } from '../enums/client.rules';
 import { ClientActions } from './client.actions';
 import { ClientEmailPolicy } from './client-email.policy';
 import { randomUUID, UUID } from 'crypto';
+import { PermissionError } from '../errors/client-permission.error';
 
 type ClientProps = {
   readonly name: string;
@@ -13,11 +14,10 @@ export class Client {
   private id: UUID = randomUUID();
   private props: ClientProps;
   private active = true;
-  private admin = false;
   private enablePerformAction: boolean = true;
   private clientRule: number = ClientRules.USER;
 
-  constructor(props: ClientProps) {
+  private constructor(props: ClientProps) {
     this.props = props;
     this.validate();
   }
@@ -28,8 +28,7 @@ export class Client {
 
   private checkIsAdmin() {
     if (this.props.email.value.includes('@admin.com')) {
-      this.admin = true;
-      this.clientRule = ClientRules.ADMIN
+      this.clientRule = ClientRules.ADMIN;
     }
   }
 
@@ -46,20 +45,12 @@ export class Client {
     return this.props.name;
   }
 
-  get isAdmin() {
-    return this.admin;
-  }
-
   get isActive() {
     return this.active;
   }
 
   get clientId() {
     return this.id;
-  }
-
-  get isEnablePerformAction() {
-    return this.enablePerformAction;
   }
 
   activate() {
@@ -78,12 +69,13 @@ export class Client {
 
   updateEmail(email: EmailVO) {
     if (!ClientEmailPolicy.canUpdate(this.clientRule)) {
-      throw new Error("The client don't have a rule to update email");
+      throw new PermissionError();
     }
     this.props.email = email;
   }
 
   getActions() {
-    return new ClientActions({ rule: this.clientRule }).getAllowedMethods();
+    if (this.enablePerformAction)
+      return new ClientActions({ rule: this.clientRule }).getAllowedMethods();
   }
 }

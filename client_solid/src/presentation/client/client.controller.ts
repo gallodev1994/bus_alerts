@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   HttpStatus,
   Patch,
+  HttpException,
 } from '@nestjs/common';
 import type { CreateClientDTO } from './dto/create.client.dto';
 import { CreateClienteUseCase } from '@/application/usecases/create-client.usecase';
@@ -28,7 +29,7 @@ export class ClientController {
   }
 
   @Patch('/change-email/:id')
-  changeEmail(
+  async changeEmail(
     @Param(
       'id',
       new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
@@ -37,22 +38,44 @@ export class ClientController {
     @Body('email')
     email: string,
   ) {
-    return this.updateEmailUseCase.execute(id, email);
+    try {
+      return await this.updateEmailUseCase.execute(id, email);
+    } catch (err) {
+      if (err.name === 'ClientPermissionError') {
+        return new HttpException(err.message, HttpStatus.METHOD_NOT_ALLOWED);
+      }
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Get(':id')
-  findOne(
+  async findOne(
     @Param(
       'id',
       new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
     )
     id: string,
   ): Promise<ClientResponseDto | ClientResponseDto[]> {
-    return this.getClientUseCase.execute(id);
+    return await this.getClientUseCase.execute(id);
   }
 
   @Get()
-  find(): Promise<ClientResponseDto | ClientResponseDto[]> {
-    return this.getClientUseCase.execute();
+  async find(): Promise<
+    ClientResponseDto | ClientResponseDto[] | HttpException
+  > {
+    try {
+      return await this.getClientUseCase.execute();
+    } catch (err) {
+      if (err.name === 'ClientNotFoundError') {
+        return new HttpException(err.message, HttpStatus.NOT_FOUND);
+      }
+      throw new HttpException(
+        'Internal Server Error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
