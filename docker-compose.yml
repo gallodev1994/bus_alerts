@@ -1,0 +1,30 @@
+services:
+  web:
+    build:
+      context: client_alerts
+      dockerfile: .
+    ports:
+      - ${APP_PORT}:3001
+    environment:
+      - APP_HOST=${APP_HOST}
+      - APP_PORT=${APP_PORT}
+  redis:
+    image: redis:alpine
+    volumes:
+      - redis-data:/data
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DB}
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  redis-data:
