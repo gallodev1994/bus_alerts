@@ -1,4 +1,5 @@
 import { Client } from '@/domain/entities/client.entity';
+import { EmailVO } from '@/domain/value-objects/email.vo';
 import { ClientResponseDto } from '@/presentation/client/dto/client-response.dto';
 
 export class ClientMapper {
@@ -22,7 +23,7 @@ export class ClientMapper {
 
   static toDomain(data: any): Client {
     return Client.createClient({
-      email: data.email,
+      email: EmailVO.create(data.email),
       name: data.name,
     });
   }

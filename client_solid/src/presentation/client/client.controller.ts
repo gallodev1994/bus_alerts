@@ -10,17 +10,19 @@ import {
   HttpException,
 } from '@nestjs/common';
 import type { CreateClientDTO } from './dto/create.client.dto';
-import { CreateClienteUseCase } from '@/application/usecases/create-client.usecase';
-import { GetClientUseCase } from '@/application/usecases/get-client.usecase';
+import { CreateClienteUseCase } from '@/application/usecases/create-client.use-case';
+import { GetClientsUseCase } from '@/application/usecases/get-clients.use-case';
+import { GetClientByIdUseCase } from '@/application/usecases/get-client-by-id.use-case';
 import { ClientResponseDto } from './dto/client-response.dto';
-import { UpdateEmailUseCase } from '@/application/usecases/update-email.usecase';
+import { UpdateEmailUseCase } from '@/application/usecases/update-email.use-case';
 
 @Controller('/clients')
 export class ClientController {
   constructor(
     private readonly createClientUseCase: CreateClienteUseCase,
-    private readonly getClientUseCase: GetClientUseCase,
+    private readonly getClientsUseCase: GetClientsUseCase,
     private readonly updateEmailUseCase: UpdateEmailUseCase,
+    private readonly getClientByIdUseCase: GetClientByIdUseCase,
   ) {}
 
   @Post()
@@ -59,7 +61,7 @@ export class ClientController {
     )
     id: string,
   ): Promise<ClientResponseDto | ClientResponseDto[]> {
-    return await this.getClientUseCase.execute(id);
+    return await this.getClientByIdUseCase.execute(id);
   }
 
   @Get()
@@ -67,7 +69,7 @@ export class ClientController {
     ClientResponseDto | ClientResponseDto[] | HttpException
   > {
     try {
-      return await this.getClientUseCase.execute();
+      return await this.getClientsUseCase.execute();
     } catch (err) {
       if (err.name === 'ClientNotFoundError') {
         return new HttpException(err.message, HttpStatus.NOT_FOUND);

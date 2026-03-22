@@ -3,7 +3,7 @@ import { ClientRules } from '../enums/client.rules';
 import { ClientActions } from './client.actions';
 import { ClientEmailPolicy } from './client-email.policy';
 import { randomUUID, UUID } from 'crypto';
-import { PermissionError } from '../errors/client-permission.error';
+import { PermissionError } from '../errors/index';
 
 type ClientProps = {
   readonly name: string;
@@ -26,7 +26,7 @@ export class Client {
     this.checkIsAdmin();
   }
 
-  private checkIsAdmin() {
+  private checkIsAdmin() {    
     if (this.props.email.value.includes('@admin.com')) {
       this.clientRule = ClientRules.ADMIN;
     }
@@ -71,7 +71,7 @@ export class Client {
     if (!ClientEmailPolicy.canUpdate(this.clientRule)) {
       throw new PermissionError();
     }
-    this.props.email = new EmailVO(email);
+    this.props.email = EmailVO.create(email);
   }
 
   getActions() {

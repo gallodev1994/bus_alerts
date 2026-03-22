@@ -1,5 +1,21 @@
+import { InvalidEmail } from '../errors';
+
 export class EmailVO {
-  constructor(public readonly value: string) {
-    if (!this.value.includes('@')) throw new Error('Invalid e-mail');
+  public readonly value;
+
+  private constructor(email: string) {
+    this.value = email;
+  }
+
+  static create(email: string) {
+    const normalizeEmail = email.toLowerCase().trim();
+    if (!this.validate(normalizeEmail)) {
+      throw new InvalidEmail();
+    }
+    return new EmailVO(normalizeEmail);
+  }
+
+  private static validate(email: string): boolean {
+    return email.includes('@');
   }
 }

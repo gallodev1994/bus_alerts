@@ -16,7 +16,7 @@ export class CreateClienteUseCase {
   async execute(createClientDto: CreateClientDTO): Promise<ClientResponseDto> {
     const client = Client.createClient({
       name: createClientDto.name,
-      email: new EmailVO(createClientDto.email),
+      email: EmailVO.create(createClientDto.email),
     });
 
     const savedClient = await this.clientRepository.save(client);

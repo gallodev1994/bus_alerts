@@ -7,4 +7,5 @@ export interface ClientWriteRepository {
 export interface ClientReadRepository {
   list(): Promise<Client[]>;
   getById(id: string): Promise<Client | null>;
+  getByEmail(email: string): Promise<Client | null>;
 }
